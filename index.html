@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cork Driver Helper</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: #ffffff;
+    }
+
+    header {
+      padding: 24px 20px;
+      background: #0b1220;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      color: #9ca3af;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid #374151;
+      background: #1f2937;
+      color: white;
+      font-size: 17px;
+      outline: none;
+    }
+
+    .search-box:focus {
+      border-color: #60a5fa;
+    }
+
+    .section-title {
+      margin-top: 28px;
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .card {
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .destination {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .info {
+      color: #d1d5db;
+      margin: 5px 0;
+    }
+
+    .label {
+      color: #9ca3af;
+    }
+
+    .empty {
+      color: #9ca3af;
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    .notice {
+      margin-top: 25px;
+      padding: 15px;
+      border-radius: 12px;
+      background: #172033;
+      border: 1px solid #374151;
+      font-size: 13px;
+      color: #d1d5db;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🚌 Cork Driver Helper</h1>
+    <p>Scroll & Route Information</p>
+  </header>
+
+  <main>
+
+    <input
+      id="search"
+      class="search-box"
+      type="text"
+      placeholder="Search destination, scroll or route..."
+    >
+
+    <div class="section-title">Scroll Information</div>
+
+    <div id="results"></div>
+
+    <div class="notice">
+      <strong>DRIVER SAFETY NOTICE</strong><br><br>
+      Cork Driver Helper must only be used when the vehicle is safely parked,
+      the engine is switched off and the handbrake is applied.
+      <br><br>
+      <strong>Do not use this application while driving.</strong>
+    </div>
+
+  </main>
+
+  <script>
+    const scrolls = [
+      {
+        scroll: "88",
+        destination: "Fountainstown via Carrigaline",
+        route: "220X"
+      },
+      {
+        scroll: "119",
+        destination: "City Service",
+        route: ""
+      },
+      {
+        scroll: "127",
+        destination: "Cloghroe via Killeens - Blarney - Tower",
+        route: "215"
+      },
+      {
+        scroll: "128",
+        destination: "Clonakilty via Bandon",
+        route: "237"
+      },
+      {
+        scroll: "131",
+        destination: "Clonmel",
+        route: "245"
+      },
+      {
+        scroll: "132",
+        destination: "Cloughduv via Killumney",
+        route: "233"
+      },
+      {
+        scroll: "133",
+        destination: "Cloyne via Carrigtwohill & Midleton",
+        route: "241"
+      },
+      {
+        scroll: "138",
+        destination: "Cork",
+        route: ""
+      },
+      {
+        scroll: "140",
+        destination: "Cork via Killarney - Ballyvourney - Macroom",
+        route: "40, 40A"
+      },
+      {
+        scroll: "142",
+        destination: "Cork via Fermoy",
+        route: "245"
+      },
+      {
+        scroll: "143",
+        destination: "Cork via Limerick",
+        route: "51"
+      },
+      {
+        scroll: "152",
+        destination: "Crosshaven via Carrigaline",
+        route: "220X"
+      },
+      {
+        scroll: "154",
+        destination: "Curraheen via City Centre - Gaol Cross (UCC) - Victoria Cross - CUH",
+        route: "208A"
+      },
+      {
+        scroll: "170",
+        destination: "Dublin",
+        route: "245X"
+      },
+      {
+        scroll: "194",
+        destination: "Farnanes via Ballincollig",
+        route: "233"
+      },
+      {
+        scroll: "196",
+        destination: "Farran via Ballincollig",
+        route: "233"
+      },
+      {
+        scroll: "197",
+        destination: "Farranree via City Centre - Blackpool - Parklands",
+        route: "203"
+      },
+      {
+        scroll: "201",
+        destination: "Fermoy via Glanmire - Watergrasshill & Rathcormac",
+        route: "245"
+      },
+      {
+        scroll: "206",
+        destination: "Fort Camden",
+        route: "220"
+      },
+      {
+        scroll: "209",
+        destination: "Galway",
+        route: "51"
+      },
+      {
+        scroll: "213",
+        destination: "Garage",
+        route: ""
+      },
+      {
+        scroll: "215",
+        destination: "Garryvoe via Midleton & Carrigtwohill",
+        route: "240"
+      },
+      {
+        scroll: "217",
+        destination: "Glasheen via City Centre - Bandon Road",
+        route: "216"
+      },
+      {
+        scroll: "220",
+        destination: "Glengariff via Bandon - Dunmanway - Drimoleague - Bantry",
+        route: "236"
+      },
+      {
+        scroll: "221",
+        destination: "Glenthorn via Summerhill North",
+        route: "207A"
+      },
+      {
+        scroll: "223",
+        destination: "Glenville",
+        route: "248"
+      },
+      {
+        scroll: "225",
+        destination: "Goleen via Bandon - Clonakilty - Skibbereen - Schull",
+        route: "237"
+      },
+      {
+        scroll: "229",
+        destination: "Grange via Turners Cross - South Douglas Road - Douglas",
+        route: "206"
+      },
+      {
+        scroll: "234",
+        destination: "Haulbowline via Ringaskiddy & Monkstown",
+        route: "223"
+      },
+      {
+        scroll: "235",
+        destination: "Hazelwood via Glanmire",
+        route: "214"
+      },
+      {
+        scroll: "240",
+        destination: "Institute of Technology",
+        route: "205"
+      },
+      {
+        scroll: "602",
+        destination: "Drop off only",
+        route: ""
+      },
+      {
+        scroll: "605",
+        destination: "Irish Explorer",
+        route: ""
+      },
+      {
+        scroll: "606",
+        destination: "Irish Pub Tour",
+        route: ""
+      },
+      {
+        scroll: "608",
+        destination: "Irish Adventure",
+        route: ""
+      },
+      {
+        scroll: "610",
+        destination: "Irish Gold",
+        route: ""
+      },
+      {
+        scroll: "689",
+        destination: "Kent Rail Stn via Parnell Pl Bus Stn Air Coach",
+        route: "226"
+      },
+      {
+        scroll: "760",
+        destination: "Kanturk",
+        route: "243"
+      }
+    ];
+
+    const results = document.getElementById("results");
+    const search = document.getElementById("search");
+
+    function displayResults(items) {
+      if (items.length === 0) {
+        results.innerHTML =
+          '<div class="empty">No matching scrolls found.</div>';
+        return;
+      }
+
+      results.innerHTML = items.map(item => `
+        <div class="card">
+          <div class="destination">${item.destination}</div>
+          <div class="info">
+            <span class="label">Scroll:</span>
+            ${item.scroll}
+          </div>
+          <div class="info">
+            <span class="label">Route:</span>
+            ${item.route || "General / No route assigned"}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function searchScrolls() {
+      const query = search.value.toLowerCase().trim();
+
+      if (!query) {
+        displayResults(scrolls);
+        return;
+      }
+
+      const filtered = scrolls.filter(item =>
+        item.scroll.toLowerCase().includes(query) ||
+        item.destination.toLowerCase().includes(query) ||
+        item.route.toLowerCase().includes(query)
+      );
+
+      displayResults(filtered);
+    }
+
+    search.addEventListener("input", searchScrolls);
+
+    displayResults(scrolls);
+  </script>
+
+</body>
+</html>
