@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cork Driver Helper</title>
+
+  <title>🚍 Cork Driver Helper</title>
 
   <style>
     * {
@@ -18,360 +19,517 @@
     }
 
     header {
-      padding: 24px 20px;
       background: #0b1220;
+      padding: 28px 20px;
       text-align: center;
+      border-bottom: 1px solid #273449;
     }
 
     header h1 {
       margin: 0;
-      font-size: 26px;
+      font-size: 30px;
     }
 
     header p {
-      margin: 8px 0 0;
+      margin: 10px 0 0;
       color: #9ca3af;
+      font-size: 18px;
     }
 
-    main {
-      max-width: 700px;
+    .container {
+      max-width: 900px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 28px 18px 50px;
     }
 
     .search-box {
       width: 100%;
-      padding: 16px;
-      border-radius: 12px;
-      border: 1px solid #374151;
-      background: #1f2937;
+      padding: 18px 20px;
+      border-radius: 20px;
+      border: 2px solid #6ea8fe;
+      background: #202b3d;
       color: white;
-      font-size: 17px;
+      font-size: 20px;
       outline: none;
+      margin-bottom: 28px;
+    }
+
+    .search-box::placeholder {
+      color: #8d98a9;
     }
 
     .search-box:focus {
-      border-color: #60a5fa;
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
     }
 
-    .section-title {
-      margin-top: 28px;
-      margin-bottom: 12px;
+    h2 {
+      font-size: 26px;
+      margin: 10px 0 20px;
+    }
+
+    #loading {
+      text-align: center;
+      color: #9ca3af;
+      padding: 30px;
       font-size: 18px;
+    }
+
+    #error {
+      display: none;
+      background: #451a1a;
+      border: 1px solid #ef4444;
+      color: #fecaca;
+      padding: 18px;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    #results {
+      display: grid;
+      gap: 18px;
     }
 
     .card {
-      background: #1f2937;
-      border: 1px solid #374151;
-      border-radius: 14px;
-      padding: 16px;
-      margin-bottom: 12px;
+      background: #202b3d;
+      border: 1px solid #334155;
+      border-radius: 22px;
+      padding: 24px 28px;
+      box-shadow: 0 5px 18px rgba(0, 0, 0, 0.18);
     }
 
-    .destination {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 10px;
+    .card h3 {
+      margin: 0 0 14px;
+      font-size: 23px;
+      line-height: 1.3;
     }
 
     .info {
-      color: #d1d5db;
-      margin: 5px 0;
+      margin: 8px 0;
+      color: #b8c0cc;
+      font-size: 18px;
     }
 
     .label {
-      color: #9ca3af;
+      color: #e5e7eb;
+      font-weight: bold;
     }
 
-    .empty {
-      color: #9ca3af;
+    .status {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #26364d;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .no-results {
       text-align: center;
-      padding: 30px 10px;
+      padding: 35px 15px;
+      color: #9ca3af;
+      font-size: 18px;
     }
 
-    .notice {
-      margin-top: 25px;
-      padding: 15px;
-      border-radius: 12px;
-      background: #172033;
-      border: 1px solid #374151;
+    footer {
+      text-align: center;
+      color: #64748b;
+      padding: 30px 15px;
       font-size: 13px;
-      color: #d1d5db;
-      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 27px;
+      }
+
+      .container {
+        padding: 22px 14px 40px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .card h3 {
+        font-size: 21px;
+      }
+
+      .info {
+        font-size: 17px;
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>🚌 Cork Driver Helper</h1>
-    <p>Scroll & Route Information</p>
-  </header>
+<header>
+  <h1>🚍 Cork Driver Helper</h1>
+  <p>Scroll &amp; Route Information</p>
+</header>
 
-  <main>
+<div class="container">
 
-    <input
-      id="search"
-      class="search-box"
-      type="text"
-      placeholder="Search destination, scroll or route..."
-    >
+  <input
+    id="search"
+    class="search-box"
+    type="text"
+    placeholder="Search destination, scroll or route..."
+    autocomplete="off"
+  >
 
-    <div class="section-title">Scroll Information</div>
+  <div id="error"></div>
 
-    <div id="results"></div>
+  <h2>Scroll Information</h2>
 
-    <div class="notice">
-      <strong>DRIVER SAFETY NOTICE</strong><br><br>
-      Cork Driver Helper must only be used when the vehicle is safely parked,
-      the engine is switched off and the handbrake is applied.
-      <br><br>
-      <strong>Do not use this application while driving.</strong>
-    </div>
+  <div id="loading">
+    Loading driver information...
+  </div>
 
-  </main>
+  <div id="results"></div>
 
-  <script>
-    const scrolls = [
-      {
-        scroll: "88",
-        destination: "Fountainstown via Carrigaline",
-        route: "220X"
-      },
-      {
-        scroll: "119",
-        destination: "City Service",
-        route: ""
-      },
-      {
-        scroll: "127",
-        destination: "Cloghroe via Killeens - Blarney - Tower",
-        route: "215"
-      },
-      {
-        scroll: "128",
-        destination: "Clonakilty via Bandon",
-        route: "237"
-      },
-      {
-        scroll: "131",
-        destination: "Clonmel",
-        route: "245"
-      },
-      {
-        scroll: "132",
-        destination: "Cloughduv via Killumney",
-        route: "233"
-      },
-      {
-        scroll: "133",
-        destination: "Cloyne via Carrigtwohill & Midleton",
-        route: "241"
-      },
-      {
-        scroll: "138",
-        destination: "Cork",
-        route: ""
-      },
-      {
-        scroll: "140",
-        destination: "Cork via Killarney - Ballyvourney - Macroom",
-        route: "40, 40A"
-      },
-      {
-        scroll: "142",
-        destination: "Cork via Fermoy",
-        route: "245"
-      },
-      {
-        scroll: "143",
-        destination: "Cork via Limerick",
-        route: "51"
-      },
-      {
-        scroll: "152",
-        destination: "Crosshaven via Carrigaline",
-        route: "220X"
-      },
-      {
-        scroll: "154",
-        destination: "Curraheen via City Centre - Gaol Cross (UCC) - Victoria Cross - CUH",
-        route: "208A"
-      },
-      {
-        scroll: "170",
-        destination: "Dublin",
-        route: "245X"
-      },
-      {
-        scroll: "194",
-        destination: "Farnanes via Ballincollig",
-        route: "233"
-      },
-      {
-        scroll: "196",
-        destination: "Farran via Ballincollig",
-        route: "233"
-      },
-      {
-        scroll: "197",
-        destination: "Farranree via City Centre - Blackpool - Parklands",
-        route: "203"
-      },
-      {
-        scroll: "201",
-        destination: "Fermoy via Glanmire - Watergrasshill & Rathcormac",
-        route: "245"
-      },
-      {
-        scroll: "206",
-        destination: "Fort Camden",
-        route: "220"
-      },
-      {
-        scroll: "209",
-        destination: "Galway",
-        route: "51"
-      },
-      {
-        scroll: "213",
-        destination: "Garage",
-        route: ""
-      },
-      {
-        scroll: "215",
-        destination: "Garryvoe via Midleton & Carrigtwohill",
-        route: "240"
-      },
-      {
-        scroll: "217",
-        destination: "Glasheen via City Centre - Bandon Road",
-        route: "216"
-      },
-      {
-        scroll: "220",
-        destination: "Glengariff via Bandon - Dunmanway - Drimoleague - Bantry",
-        route: "236"
-      },
-      {
-        scroll: "221",
-        destination: "Glenthorn via Summerhill North",
-        route: "207A"
-      },
-      {
-        scroll: "223",
-        destination: "Glenville",
-        route: "248"
-      },
-      {
-        scroll: "225",
-        destination: "Goleen via Bandon - Clonakilty - Skibbereen - Schull",
-        route: "237"
-      },
-      {
-        scroll: "229",
-        destination: "Grange via Turners Cross - South Douglas Road - Douglas",
-        route: "206"
-      },
-      {
-        scroll: "234",
-        destination: "Haulbowline via Ringaskiddy & Monkstown",
-        route: "223"
-      },
-      {
-        scroll: "235",
-        destination: "Hazelwood via Glanmire",
-        route: "214"
-      },
-      {
-        scroll: "240",
-        destination: "Institute of Technology",
-        route: "205"
-      },
-      {
-        scroll: "602",
-        destination: "Drop off only",
-        route: ""
-      },
-      {
-        scroll: "605",
-        destination: "Irish Explorer",
-        route: ""
-      },
-      {
-        scroll: "606",
-        destination: "Irish Pub Tour",
-        route: ""
-      },
-      {
-        scroll: "608",
-        destination: "Irish Adventure",
-        route: ""
-      },
-      {
-        scroll: "610",
-        destination: "Irish Gold",
-        route: ""
-      },
-      {
-        scroll: "689",
-        destination: "Kent Rail Stn via Parnell Pl Bus Stn Air Coach",
-        route: "226"
-      },
-      {
-        scroll: "760",
-        destination: "Kanturk",
-        route: "243"
-      }
-    ];
+</div>
 
-    const results = document.getElementById("results");
-    const search = document.getElementById("search");
+<footer>
+  Cork Driver Helper
+</footer>
 
-    function displayResults(items) {
-      if (items.length === 0) {
-        results.innerHTML =
-          '<div class="empty">No matching scrolls found.</div>';
-        return;
-      }
 
-      results.innerHTML = items.map(item => `
-        <div class="card">
-          <div class="destination">${item.destination}</div>
-          <div class="info">
-            <span class="label">Scroll:</span>
-            ${item.scroll}
-          </div>
-          <div class="info">
-            <span class="label">Route:</span>
-            ${item.route || "General / No route assigned"}
-          </div>
-        </div>
-      `).join("");
-    }
+<script type="module">
 
-    function searchScrolls() {
-      const query = search.value.toLowerCase().trim();
+  /*
+   * ============================================================
+   * FIREBASE CONFIGURATION
+   * ============================================================
+   *
+   * Replace the values below with the configuration from:
+   * Firebase Console → Project settings → Your apps → Web app
+   *
+   * DO NOT change the names of the fields.
+   */
 
-      if (!query) {
-        displayResults(scrolls);
-        return;
-      }
+  const firebaseConfig = {
+    apiKey: "AIzaSyD_mVNVqFc4kX9loDK0sdBZOMnh2396ghI",
+    authDomain: "cork-driver-helper.firebaseapp.com",
+    projectId: "cork-driver-helper",
+    storageBucket: "cork-driver-helper.firebasestorage.app",
+    messagingSenderId: "1073459449103",
+    appId: "1:1073459449103:web:30ab72e4ee3dd9bddd427a",
+    measurementId: "G-P8PFY2X658"
+  };
 
-      const filtered = scrolls.filter(item =>
-        item.scroll.toLowerCase().includes(query) ||
-        item.destination.toLowerCase().includes(query) ||
-        item.route.toLowerCase().includes(query)
+
+  /*
+   * ============================================================
+   * FIREBASE
+   * ============================================================
+   */
+
+  import {
+    initializeApp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+  import {
+    getFirestore,
+    collection,
+    getDocs
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+
+  /*
+   * ============================================================
+   * ELEMENTS
+   * ============================================================
+   */
+
+  const search = document.getElementById("search");
+  const results = document.getElementById("results");
+  const loading = document.getElementById("loading");
+  const errorBox = document.getElementById("error");
+
+
+  /*
+   * ============================================================
+   * DATA
+   * ============================================================
+   */
+
+  let scrolls = [];
+
+
+  /*
+   * ============================================================
+   * LOAD DATA FROM FIRESTORE
+   * ============================================================
+   *
+   * Firestore collection:
+   *
+   * destinations
+   *
+   */
+
+  async function loadData() {
+
+    try {
+
+      loading.style.display = "block";
+      errorBox.style.display = "none";
+
+      const snapshot = await getDocs(
+        collection(db, "destinations")
       );
 
-      displayResults(filtered);
+      scrolls = [];
+
+      snapshot.forEach((doc) => {
+
+        const data = doc.data();
+
+        scrolls.push({
+          id: doc.id,
+          destination: data.destination || "",
+          scroll: data.scrollNumber ?? "",
+          route: data.routeNumber || "",
+          garage: data.garage || "",
+          notes: data.notes || "",
+          status: data.status || ""
+        });
+
+      });
+
+      loading.style.display = "none";
+
+      displayResults(scrolls);
+
+    } catch (error) {
+
+      console.error(error);
+
+      loading.style.display = "none";
+
+      errorBox.style.display = "block";
+
+      errorBox.innerHTML =
+        "<strong>Unable to load the driver information.</strong><br><br>" +
+        "Firebase error: " +
+        escapeHtml(error.message);
+
     }
 
-    search.addEventListener("input", searchScrolls);
+  }
 
-    displayResults(scrolls);
-  </script>
+
+  /*
+   * ============================================================
+   * DISPLAY RESULTS
+   * ============================================================
+   */
+
+  function displayResults(items) {
+
+    results.innerHTML = "";
+
+    if (items.length === 0) {
+
+      results.innerHTML =
+        '<div class="no-results">No driver information found.</div>';
+
+      return;
+    }
+
+
+    items.forEach((item) => {
+
+      const card = document.createElement("div");
+
+      card.className = "card";
+
+
+      let html = "";
+
+      html += `
+        <h3>${escapeHtml(item.destination || "Unknown destination")}</h3>
+      `;
+
+
+      if (item.scroll !== "") {
+
+        html += `
+          <div class="info">
+            <span class="label">Scroll:</span>
+            ${escapeHtml(String(item.scroll))}
+          </div>
+        `;
+
+      }
+
+
+      if (item.route !== "") {
+
+        html += `
+          <div class="info">
+            <span class="label">Route:</span>
+            ${escapeHtml(String(item.route))}
+          </div>
+        `;
+
+      }
+
+
+      if (item.garage !== "") {
+
+        html += `
+          <div class="info">
+            <span class="label">Garage:</span>
+            ${escapeHtml(String(item.garage))}
+          </div>
+        `;
+
+      }
+
+
+      if (item.notes !== "") {
+
+        html += `
+          <div class="info">
+            <span class="label">Notes:</span>
+            ${escapeHtml(String(item.notes))}
+          </div>
+        `;
+
+      }
+
+
+      if (item.status !== "") {
+
+        html += `
+          <div class="status">
+            ${escapeHtml(String(item.status))}
+          </div>
+        `;
+
+      }
+
+
+      card.innerHTML = html;
+
+      results.appendChild(card);
+
+    });
+
+  }
+
+
+  /*
+   * ============================================================
+   * SEARCH
+   * ============================================================
+   */
+
+  function searchScrolls() {
+
+    const query = search.value
+      .toLowerCase()
+      .trim();
+
+
+    if (!query) {
+
+      displayResults(scrolls);
+
+      return;
+
+    }
+
+
+    const filtered = scrolls.filter((item) => {
+
+      return (
+
+        String(item.destination)
+          .toLowerCase()
+          .includes(query)
+
+        ||
+
+        String(item.scroll)
+          .toLowerCase()
+          .includes(query)
+
+        ||
+
+        String(item.route)
+          .toLowerCase()
+          .includes(query)
+
+        ||
+
+        String(item.garage)
+          .toLowerCase()
+          .includes(query)
+
+        ||
+
+        String(item.notes)
+          .toLowerCase()
+          .includes(query)
+
+      );
+
+    });
+
+
+    displayResults(filtered);
+
+  }
+
+
+  /*
+   * ============================================================
+   * SECURITY
+   * ============================================================
+   */
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+
+  }
+
+
+  /*
+   * ============================================================
+   * EVENTS
+   * ============================================================
+   */
+
+  search.addEventListener(
+    "input",
+    searchScrolls
+  );
+
+
+  /*
+   * ============================================================
+   * START
+   * ============================================================
+   */
+
+  loadData();
+
+</script>
 
 </body>
 </html>
