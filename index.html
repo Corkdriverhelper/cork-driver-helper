@@ -235,7 +235,9 @@
   import {
     getFirestore,
     collection,
-    getDocs
+    getDocs,
+    updateDoc,
+    doc
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -330,9 +332,7 @@
    * ============================================================
    * DISPLAY RESULTS
    * ============================================================
-   */
-
-  function displayResults(items) {
+   */function displayResultsults(items) {
 
     results.innerHTML = "";
 
@@ -368,12 +368,26 @@
           </div>
         `;
 
-      }
+     html
 
-html += `
+        html += `
     <div class="info">
         <span class="label">Route:</span>
-        ${escapeHtml(String(item.route || ""))}
+
+        <input
+            type="text"
+            class="route-input"
+            value="${escapeHtml(String(item.route || ""))}"
+            data-id="${escapeHtml(item.id)}"
+            placeholder="Route number"
+        >
+
+        <button
+            class="save-route"
+            data-id="${escapeHtml(item.id)}"
+        >
+            Save
+        </button>
     </div>
 `;
 
@@ -420,7 +434,39 @@ html += `
     });
 
   }
+async function saveRouteNumber(id, routeNumber) {
+    try {
+        const routeRef = doc(db, "destinations", id);
 
+        await updateDoc(routeRef, {
+            routeNumber: routeNumber.trim()
+        });
+
+        alert("Route number saved.");
+
+    } catch (error) {
+        console.error(error);
+        alert("Could not save route number.");
+    }
+}document.addEventListener("click", (event) => {
+
+    if (!event.target.classList.contains("save-route")) {
+        return;
+    }
+
+    const id = event.target.dataset.id;
+
+    const input = document.querySelector(
+        `.route-input[data-id="${id}"]`
+    );
+
+    if (!input) {
+        return;
+    }
+
+    saveRouteNumber(id, input.value);
+});
+  
 
   /*
    * ============================================================
